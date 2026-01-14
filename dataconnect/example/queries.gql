@@ -1,0 +1,34 @@
+mutation AddNewProduct($name: String!, $sku: String!, $createdAt: Timestamp!) @auth(level: USER) {
+  product_insert(data: {name: $name, sku: $sku, createdAt: $createdAt})
+}
+
+query ListProducts @auth(level: PUBLIC, insecureReason: "This operation is safe to expose to the public") {
+  products {
+    id
+    name
+    sku
+    description
+    imageUrl
+    price
+  }
+}
+
+mutation UpdateQuantity($storeId: UUID!, $productId: UUID!, $quantity: Int!) @auth(level: USER) {
+  inventoryItem_upsert(data: {storeId: $storeId, productId: $productId, quantity: $quantity, lastUpdatedAt_expr: "request.time"})
+}
+
+query GetStoreInventory($storeId: UUID!) @auth(level: USER) {
+  store(id: $storeId) {
+    id
+    name
+    address
+    products_via_InventoryItem {
+      id
+      name
+      sku
+      description
+      imageUrl
+      price
+    }
+  }
+}

@@ -1,0 +1,45 @@
+type User @table {
+  username: String!
+  passwordHash: String!
+  role: String!
+  createdAt: Timestamp!
+  email: String
+  displayName: String
+}
+
+type Store @table {
+  name: String!
+  address: String!
+  createdAt: Timestamp!
+  phoneNumber: String
+  manager: User
+}
+
+type Product @table {
+  name: String!
+  sku: String!
+  createdAt: Timestamp!
+  description: String
+  price: Float
+  imageUrl: String
+}
+
+type InventoryItem @table(key: ["store", "product"]) {
+  store: Store!
+  product: Product!
+  quantity: Int!
+  lastUpdatedAt: Timestamp!
+}
+
+type Transfer @table {
+  fromStore: Store!
+  toStore: Store!
+  product: Product!
+  initiatedBy: User!
+  quantity: Int!
+  transferDate: Date!
+  status: String!
+  createdAt: Timestamp!
+  approvedBy: User
+  approvalDate: Timestamp
+}
